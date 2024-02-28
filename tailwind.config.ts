@@ -25,17 +25,14 @@ module.exports = withUt({
           DEFAULT: '#CB8C2F',
           foreground: 'hsl(var(--primary-foreground))',
         },
-        coral: {
-          500: '#15BF59',
-        },
 
         grey: {
-          600: '#545454', // Subdued - color name in figma
+          600: '#545454', 
           500: '#757575',
-          400: '#AFAFAF', // Disabled - color name in figma
-          50: '#F6F6F6', // White Grey - color name in figma
+          400: '#AFAFAF',
+          50: '#F6F6F6',
         },
-        black: '#000000',
+        black: '#545454',
         white: '#FFFFFF',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -95,4 +92,9 @@ module.exports = withUt({
     },
   },
   plugins: [require('tailwindcss-animate')],
+  variants: {
+    extend: {
+      fill: ['hover', 'focus'],
+    },
+  },
 });
