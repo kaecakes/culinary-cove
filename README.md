@@ -1,4 +1,27 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Culinary Cove: Recipe Book Builder 🚧 (Under Construction)
+
+Welcome to Culinary Cove: Recipe Book Builder! This project is currently under construction but aims to be your serene corner of the internet for creating and organizing your personalized recipe book. Whether you're a culinary enthusiast, a home cook, or just someone who loves collecting recipes, Culinary Cove will be your sanctuary for culinary exploration.
+
+## What is Culinary Cove: Recipe Book Builder?
+
+Culinary Cove: Recipe Book Builder is a web application that invites users to create accounts and curate their own recipe books by scraping their favorite recipes from the web. Once logged in, users will have the serene experience of:
+
+- Easily adding recipes from their favorite cooking websites.
+- Organizing recipes into categories and tags for effortless retrieval.
+- Personalizing recipes with notes, ratings, and more.
+- Sharing culinary discoveries with friends and family.
+- Delving into a community-driven database of delectable recipes.
+
+## Features (Coming Soon)
+
+While the project is currently under development, here are some features we're eagerly working on implementing:
+
+- User authentication and account creation.
+- Seamless web scraping functionality to extract recipes from popular cooking websites.
+- A serene and intuitive interface for adding, editing, and organizing recipes.
+- Intuitive search and filtering options for swift recipe retrieval.
+- Social features for sharing recipes and fostering culinary connections.
+- Mobile responsiveness for a tranquil experience across various devices.
 
 ## Getting Started
 
@@ -13,21 +36,6 @@ pnpm dev
 # or
 bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
 
