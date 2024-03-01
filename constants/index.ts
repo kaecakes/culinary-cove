@@ -13,10 +13,16 @@ export const headerLinks = [
     },
   ]
   
-  export const eventDefaultValues = {
+  export const recipeDefaultValues = {
     title: '',
     description: '',
     imageUrl: '',
     categoryId: '',
+    ingredients: [],
+    instructions: '',
+    isPublic: false,
     url: '',
+    prepTime: '',
+    cookTime: '',
+    servings: '',
   }

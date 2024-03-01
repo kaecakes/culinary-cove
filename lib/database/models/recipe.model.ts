@@ -5,21 +5,29 @@ export interface IRecipe extends Document {
     title: string;
     description?: string;
     imageUrl?: string;
-    ingredients?: string | string[];
+    ingredients?: [{ type: String }];
     instructions?: string;
     isPublic: boolean;
+    url?: string;
+    prepTime?: string;
+    cookTime?: string;
+    servings?: string;
     category?: { _id: string, name: string };
     author: { _id: string, firstName: string, lastName: string };
 }
 
 const RecipeSchema = new Schema({
     title: { type: String, required: true },
-    description: { type: String },
-    imageUrl: { type: String },
-    ingredients: { type: String || Array<String> },
-    instructions: { type: String },
+    description: { type: String, required: false },
+    imageUrl: { type: String, required: false },
+    ingredients: [{ type: String }],
+    instructions: { type: String, required: false },
+    url: { type: String, required: false },
+    prepTime: { type: String, required: false },
+    cookTime: { type: String, required: false },
+    servings: { type: String, required: false },
     isPublic: { type: Boolean, default: false },
-    category: { type: Schema.Types.ObjectId, ref: 'Category' },
+    category: { type: Schema.Types.ObjectId || String, ref: 'Category', required: false },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 })
 
