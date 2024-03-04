@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@clerk/nextjs";
 import { connectToDatabase } from "@/lib/database";
 import { handleError } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
@@ -34,6 +35,7 @@ export const getUserById = async (userId: string) => {
 
 export const updateUser = async (clerkId: string, user: UpdateUserParams) => {
     try {
+        if (!isAuthor(clerkId)) throw new Error('User does not have permission to do this action');
         await connectToDatabase();
         const updatedUser = await User.findOneAndUpdate({ clerkId }, user, { new: true });
         if (!updatedUser) throw new Error('User update failed');
@@ -51,7 +53,7 @@ export const deleteUser = async (clerkId: string) => {
         // unlink relationships
         await Promise.all([
             Recipe.updateMany(
-                { _id: { $in: userToDelete.events } },
+                { _id: { $in: userToDelete.recipes } },
                 { $pull: { author: userToDelete._id } },
             )
         ])
@@ -61,4 +63,10 @@ export const deleteUser = async (clerkId: string) => {
     } catch (error) {
         handleError(error);
     }
+}
+
+export const isAuthor = async (userId: string) => {
+    const { sessionClaims } = auth();
+    const clerkId = sessionClaims?.userId as string;
+    return clerkId === userId;
 }

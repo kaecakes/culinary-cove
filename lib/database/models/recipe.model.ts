@@ -5,7 +5,7 @@ export interface IRecipe extends Document {
     title: string;
     description?: string;
     imageUrl?: string;
-    ingredients?: [{ type: String }];
+    ingredients?: [];
     instructions?: string;
     isPublic: boolean;
     url?: string;
@@ -20,7 +20,7 @@ const RecipeSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: false },
     imageUrl: { type: String, required: false },
-    ingredients: [{ type: String }],
+    ingredients: [],
     instructions: { type: String, required: false },
     url: { type: String, required: false },
     prepTime: { type: String, required: false },

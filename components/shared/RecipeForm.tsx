@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
-import { createRecipe } from "@/lib/actions/recipe.actions";
+import { createRecipe, updateRecipe } from "@/lib/actions/recipe.actions";
 import { recipeFormSchema } from "@/lib/validator";
 import { recipeDefaultValues } from "@/constants";
 import { useUploadThing } from "@/lib/uploadthing";
@@ -18,16 +18,21 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { IRecipe } from "@/lib/database/models/recipe.model";
 
 type RecipeFormProps = {
     userId: string,
-    type: 'Create' | 'Update'
+    type: 'Create' | 'Update',
+    recipeId?: string,
+    recipe?: IRecipe
 }
 
-const RecipeForm = ({ userId, type }: RecipeFormProps) => {
+const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
     const [files, setFiles] = useState<File[]>([]);
     const [newIngredient, setNewIngredient] = useState<string>('');
-    const initialValues = recipeDefaultValues;
+    const initialValues = recipe && type === 'Update'
+        ? recipe
+        : recipeDefaultValues;
     const router = useRouter();
 
     const { startUpload } = useUploadThing('imageUploader');
@@ -77,6 +82,25 @@ const RecipeForm = ({ userId, type }: RecipeFormProps) => {
                 if (newRecipe) {
                     form.reset();
                     router.push(`/recipes/${newRecipe._id}`);
+                }
+            } catch (error) {
+                console.warn(error);
+            }
+        }
+        if (type === 'Update') {
+            if (!recipeId) {
+                router.back();
+                return;
+            }
+
+            try {
+                const updatedRecipe = await updateRecipe({
+                    recipe: { ...recipeData, imageUrl: uploadedImageUrl, _id: recipeId },
+                    path: `/recipes/${recipeId}`,
+                });
+                if (updatedRecipe) {
+                    form.reset();
+                    router.push(`/recipes/${updatedRecipe._id}`);
                 }
             } catch (error) {
                 console.warn(error);

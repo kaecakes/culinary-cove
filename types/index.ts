@@ -35,7 +35,6 @@ export type CreateRecipeParams = {
 }
 
 export type UpdateRecipeParams = {
-    userId: string
     recipe: {
         _id: string
         title: string
