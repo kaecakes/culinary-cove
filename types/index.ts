@@ -16,76 +16,84 @@ export type UpdateUserParams = {
 }
 
 // ====== RECIPE PARAMS
-export type CreateEventParams = {
+export type CreateRecipeParams = {
     userId: string
-    event: {
+    recipe: {
         title: string
-        description: string
-        location: string
-        imageUrl: string
-        startDateTime: Date
-        endDateTime: Date
-        categoryId: string
-        price: string
-        isFree: boolean
-        url: string
+        description?: string
+        imageUrl?: string
+        ingredients?: Array<string>
+        instructions?: string
+        isPublic: boolean
+        prepTime?: string
+        cookTime?: string
+        servings?: string
+        url?: string
+        categoryId?: string
     }
     path: string
 }
 
-export type UpdateEventParams = {
-    userId: string
-    event: {
+export type UpdateRecipeParams = {
+    recipe: {
         _id: string
         title: string
         description?: string
         imageUrl?: string
-        ingredients?: string | string[]
+        ingredients?: Array<string>
         instructions?: string
         isPublic: boolean
+        prepTime?: string
+        cookTime?: string
+        servings?: string
+        categoryId?: string
     }
     path: string
 }
 
-export type DeleteEventParams = {
-    eventId: string
+export type DeleteRecipeParams = {
+    recipeId: string
     path: string
 }
 
-export type GetAllEventsParams = {
+export type GetAllRecipesParams = {
     query: string
     category: string
     limit: number
     page: number
 }
 
-export type GetEventsByUserParams = {
+export type GetRecipesByUserParams = {
     userId: string
     limit?: number
     page: number
 }
 
-export type GetRelatedEventsByCategoryParams = {
+export type GetRelatedRecipesByCategoryParams = {
     categoryId: string
     recipeId: string
     limit?: number
     page: number | string
 }
 
-export type Event = {
+export type Recipe = {
     _id: string
     title: string
     description?: string
     imageUrl?: string
-    ingredients?: string | string[]
+    ingredients?: Array<string>
     instructions?: string
     isPublic: boolean
+    url?: string
+    prepTime?: string
+    cookTime?: string
+    servings?: string
     author: {
         _id: string
         firstName: string
         lastName: string
     }
-    category: {
+    category?: {
         _id: string
         name: string
     }

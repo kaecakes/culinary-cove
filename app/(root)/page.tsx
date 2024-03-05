@@ -1,8 +1,18 @@
-import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
 
-export default function Home() {
+import { Button } from "@/components/ui/button"
+import Collection from "@/components/shared/Collection"
+import { getAllRecipes } from "@/lib/actions/recipe.actions"
+
+export default async function Home() {
+  const recipes = await getAllRecipes({
+    query: "",
+    category: "",
+    page: 1,
+    limit: 6,
+  });
+  
   return (
     <main>
       <>
@@ -12,7 +22,7 @@ export default function Home() {
               <h1 className="text-4xl md:text-6xl">Crafted with love and geekiness.</h1>
               <p className="text-xs sm:text-sm">Dive into a world where passion meets expertise, where every dish is a labor of love, seasoned with a dash of geeky enthusiasm.</p>
               <Button size="lg" asChild className="button w-full md:w-fit">
-                <Link href="#events">
+                <Link href="#recipes">
                   Explore Now
                 </Link>
               </Button>
@@ -26,7 +36,7 @@ export default function Home() {
             />
           </div>
         </section>
-        <section id="events" className="wrapper my-8 flex flex-col gap-8 md:gap-12">
+        <section id="recipes" className="wrapper my-8 flex flex-col gap-8 md:gap-12">
           <h2 className="h2-bold">
             Some title here
           </h2>
@@ -34,6 +44,15 @@ export default function Home() {
             Search
             CatergoryFilter
           </div>
+          <Collection
+            data={recipes?.data}
+            emptyTitle="No recipes found"
+            emptyStateSubtext=""
+            collectionType="All_Recipes"
+            limit={6}
+            page={1}
+            totalPages={2}
+          />
         </section>
       </>
     </main>
