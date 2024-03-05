@@ -1,15 +1,23 @@
-import Image from "next/image"
-import Link from "next/link"
+import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
-import Collection from "@/components/shared/Collection"
-import { getAllRecipes } from "@/lib/actions/recipe.actions"
+import { Button } from "@/components/ui/button";
+import CategoryFilter from "@/components/shared/CategoryFilter";
+import Collection from "@/components/shared/Collection";
+import Search from "@/components/shared/Search";
 
-export default async function Home() {
+import { getAllRecipes } from "@/lib/actions/recipe.actions";
+import { SearchParamProps } from "@/types";
+
+export default async function Home({ searchParams }: SearchParamProps) {
+  const page = Number(searchParams?.page) || 1;
+  const searchText = (searchParams?.query as string) || "";
+  const category = (searchParams?.category as string) || "";
+
   const recipes = await getAllRecipes({
-    query: "",
-    category: "",
-    page: 1,
+    query: searchText,
+    category,
+    page,
     limit: 6,
   });
   
@@ -38,11 +46,11 @@ export default async function Home() {
         </section>
         <section id="recipes" className="wrapper my-8 flex flex-col gap-8 md:gap-12">
           <h2 className="h2-bold">
-            Some title here
+            Recent recipes
           </h2>
           <div className="flex w-full flex-col gap-5 md:flex-row">
-            Search
-            CatergoryFilter
+            <Search />
+            <CategoryFilter />
           </div>
           <Collection
             data={recipes?.data}
