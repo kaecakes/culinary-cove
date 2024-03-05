@@ -9,8 +9,10 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
 import { createRecipe, updateRecipe } from "@/lib/actions/recipe.actions";
+import { handleError } from "@/lib/utils";
 import { recipeFormSchema } from "@/lib/validator";
 import { recipeDefaultValues } from "@/constants";
+import { scrapeAndReturnRecipe } from "@/lib/actions/scraper";
 import { useUploadThing } from "@/lib/uploadthing";
 
 import { ChangeEvent, useState } from "react";
@@ -18,6 +20,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+
 import { IRecipe } from "@/lib/database/models/recipe.model";
 
 type RecipeFormProps = {
@@ -29,18 +32,39 @@ type RecipeFormProps = {
 
 const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
     const [files, setFiles] = useState<File[]>([]);
-    const [newIngredient, setNewIngredient] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [newIngredient, setNewIngredient] = useState<string>("");
+    const router = useRouter();
+    const { startUpload } = useUploadThing('imageUploader');
+
     const initialValues = recipe && type === 'Update'
         ? recipe
         : recipeDefaultValues;
-    const router = useRouter();
-
-    const { startUpload } = useUploadThing('imageUploader');
 
     const form = useForm<z.infer<typeof recipeFormSchema>>({
       resolver: zodResolver(recipeFormSchema),
       defaultValues: initialValues,
     })
+
+    async function getRecipeData() {
+        try {
+            const recipeUrl = form.getValues().url || "";
+            const parsedUrl = new URL(recipeUrl);
+            if (!parsedUrl) throw new Error("URL not valid");
+            setIsLoading(true);
+            // scrape recipe
+            const recipe = await scrapeAndReturnRecipe(recipeUrl);
+            if (!recipe) throw new Error("Could not pull recipe data from URL");
+            form.setValue("title", recipe.title || "");
+            form.setValue("description", recipe.description || "");
+            form.setValue("imageUrl", recipe.imageUrl || "");
+            form.setValue("ingredients", recipe.ingredients || []);
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     function handleNewIngredientInput(e: ChangeEvent<HTMLInputElement>) {
         setNewIngredient(e.target.value);
@@ -111,19 +135,30 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
-                {/* URL */}
-                <FormField
-                    control={form.control}
-                    name="url"
-                    render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormControl>
-                                <Input placeholder="Import an existing recipe" {...field} className="input-field" />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <div className="flex gap-5">
+                    {/* URL */}
+                    <FormField
+                        control={form.control}
+                        name="url"
+                        render={({ field }) => (
+                            <FormItem className="w-full">
+                                <FormControl>
+                                    <Input placeholder="Import an existing recipe" {...field} className="input-field" />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button
+                        type="button"
+                        disabled={form.getValues().url === '' || isLoading}
+                        onClick={getRecipeData}
+                        size="lg"
+                        className="h-100 min-w-[120px] rounded-full"
+                    >
+                        {isLoading ? 'Gathering' : 'Import'} data
+                    </Button>
+                </div>
                 {/* NAME AND ACCESS */}
                 <div className="flex flex-col gap-5 md:flex-row">
                     <FormField
