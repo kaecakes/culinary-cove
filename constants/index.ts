@@ -6,12 +6,12 @@ export const headerLinks = [
     route: '/',
   },
   {
-    label: 'About us',
+    label: 'About Us',
     route: '/about',
   },
   {
-    label: 'Recipes',
-    route: '/recipes',
+    label: 'My Recipes',
+    route: '/profile',
   },
 ]
   
