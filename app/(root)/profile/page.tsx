@@ -2,12 +2,17 @@ import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { getRecipesByUser } from "@/lib/actions/recipe.actions";
 import Collection from "@/components/shared/Collection";
 
-const ProfilePage = async () => {
+import { getRecipesByUser } from "@/lib/actions/recipe.actions";
+import { SearchParamProps } from "@/types";
+
+const ProfilePage = async ({ searchParams }: SearchParamProps) => {
     const { sessionClaims } = auth();
     const userId = sessionClaims?.userId as string;
+
+    const recipesPage = Number(searchParams?.recipesPage) || 1;
+
     const recipes = await getRecipesByUser({userId, page: 1});
     return (
         <>
@@ -25,11 +30,12 @@ const ProfilePage = async () => {
                 <Collection
                     data={recipes?.data}
                     emptyTitle="No recipes posted yet"
-                    emptyStateSubtext=""
+                    emptyStateSubtext="No recipes yet? Share your culinary creations and inspire our community!"
                     collectionType="All_Recipes"
-                    limit={6}
-                    page={1}
-                    totalPages={2}
+                    limit={3}
+                    page={recipesPage}
+                    urlParamName="recipesPage"
+                    totalPages={recipes?.totalPages}
                 />
             </section>
         </>

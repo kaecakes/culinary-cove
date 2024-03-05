@@ -18,7 +18,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
     query: searchText,
     category,
     page,
-    limit: 6,
+    limit: 3,
   });
   
   return (
@@ -55,11 +55,11 @@ export default async function Home({ searchParams }: SearchParamProps) {
           <Collection
             data={recipes?.data}
             emptyTitle="No recipes found"
-            emptyStateSubtext=""
+            emptyStateSubtext="Adjust your search or share your own recipes to enrich our culinary community!"
             collectionType="All_Recipes"
             limit={6}
-            page={1}
-            totalPages={2}
+            page={page}
+            totalPages={recipes?.totalPages}
           />
         </section>
       </>

@@ -6,6 +6,7 @@ import Collection from "@/components/shared/Collection";
 
 const RecipeDetails = async ({ params: { id }, searchParams}: SearchParamProps) => {
     const recipe = await getRecipeById(id);
+
     const relatedRecipes = recipe.category
         ? (await getRelatedRecipesByCategory({
             categoryId: recipe.category._id,
@@ -13,6 +14,7 @@ const RecipeDetails = async ({ params: { id }, searchParams}: SearchParamProps) 
             page: searchParams.page as string,
         }))?.data
         : [];
+
     return (
         <>
             <section className="flex justify-center">
@@ -92,11 +94,11 @@ const RecipeDetails = async ({ params: { id }, searchParams}: SearchParamProps) 
                 <Collection
                     data={relatedRecipes}
                     emptyTitle="No recipes found"
-                    emptyStateSubtext=""
+                    emptyStateSubtext="No related recipes found. Why not explore more or share your own unique creations?"
                     collectionType="All_Recipes"
-                    limit={6}
-                    page={1}
-                    totalPages={2}
+                    limit={3}
+                    page={searchParams.page as string}
+                    totalPages={relatedRecipes?.totalPages}
                 />
             </section>
         </>
