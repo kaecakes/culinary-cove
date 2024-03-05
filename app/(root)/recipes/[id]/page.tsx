@@ -59,14 +59,18 @@ const RecipeDetails = async ({ params: { id }, searchParams}: SearchParamProps) 
                         {/* DETAILS */}
                         <div className="flex flex-col gap-2">
                             {/* INGREDIENTS */}
-                            {recipe.ingredients.map((ingredient: string, index: number) => (
-                                <div key={ingredient + index}>
+                            {recipe.ingredients && (
+                                <>
                                     <p className="p-medium-16 lg:p-regular-18 text-grey-600">Ingredients:</p>
-                                    <p className="p-medium-16 lg:p-regular-18">
-                                        {ingredient}
-                                    </p>
-                                </div>
-                            ))}
+                                    {recipe.ingredients.map((ingredient: string, index: number) => (
+                                        <div key={ingredient + index}>
+                                            <p className="p-medium-16 lg:p-regular-18">
+                                                {ingredient}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </>
+                            )}
                             {/* INSTRUCTIONS */}
                             {recipe.instructions && (
                                 <>

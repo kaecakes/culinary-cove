@@ -65,6 +65,7 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
     }
    
     async function onSubmit(values: z.infer<typeof recipeFormSchema>) {
+        addIngredients();
         const recipeData = values;
         let uploadedImageUrl = values.imageUrl;
         if (files.length > 0) {
