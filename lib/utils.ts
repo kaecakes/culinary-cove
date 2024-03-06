@@ -85,3 +85,7 @@ export const handleError = (error: unknown) => {
     error : JSON.stringify(error)
   );
 }
+
+export const wait = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
