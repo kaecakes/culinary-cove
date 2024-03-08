@@ -22,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { IRecipe } from "@/lib/database/models/recipe.model";
+import Tiptap from "./Tiptap";
 
 type RecipeFormProps = {
     userId: string,
@@ -33,6 +34,7 @@ type RecipeFormProps = {
 const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
     const [files, setFiles] = useState<File[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [instructions, setInstructions] = useState<string>("");
     const [newIngredient, setNewIngredient] = useState<string>("");
     const router = useRouter();
     const { startUpload } = useUploadThing("imageUploader");
@@ -59,7 +61,7 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
             form.setValue("description", recipe.description || "");
             form.setValue("imageUrl", recipe.imageUrl || "");
             form.setValue("ingredients", recipe.ingredients || []);
-            form.setValue("instructions", recipe.instructions || "");
+            setInstructions(recipe.instructions || "");
         } catch (error) {
             handleError(error);
         } finally {
@@ -67,11 +69,15 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
         }
     }
 
+    function handleInstructionsChange(instructions: string) {
+        setInstructions(instructions);
+    }
+
     function handleNewIngredientInput(e: ChangeEvent<HTMLInputElement>) {
         setNewIngredient(e.target.value);
     }
 
-    function addIngredients() {
+    function updateIngredients() {
         const ingredientsArray = form.getValues().ingredients || [];
         const newIngredients = newIngredient
             .split(',')
@@ -90,7 +96,7 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
     }
    
     async function onSubmit(values: z.infer<typeof recipeFormSchema>) {
-        addIngredients();
+        updateIngredients();
         const recipeData = values;
         let uploadedImageUrl = values.imageUrl;
         if (files.length > 0) {
@@ -98,6 +104,7 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
             if (!uploadedImages) return;
             uploadedImageUrl = uploadedImages[0].url;
         }
+        recipeData.instructions = instructions;
         if (type === 'Create') {
             try {
                 const newRecipe = await createRecipe({
@@ -283,11 +290,11 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
                         placeholder="Add ingredients, seperated by commas"
                         value={newIngredient}
                         onChange={handleNewIngredientInput}
-                        onKeyDown={(e) => e.key === 'Enter' && addIngredients()}
+                        onKeyDown={(e) => e.key === 'Enter' && updateIngredients()}
                         className="input-field" />
                     <Button
                         type="button"
-                        onClick={addIngredients}
+                        onClick={updateIngredients}
                         className="h-100 min-w-[120px] rounded-full"
                     >
                         Add
@@ -323,7 +330,11 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
                     render={({ field }) => (
                         <FormItem className="w-full">
                             <FormControl className="h-72">
-                                <Textarea placeholder="Instructions" {...field} className="textarea rounded-2xl" />
+                                {/* <Textarea placeholder="Instructions" {...field} className="textarea rounded-2xl" /> */}
+                                <Tiptap
+                                    instructions={instructions}
+                                    onChange={(newInstructions: string) => handleInstructionsChange(newInstructions)}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

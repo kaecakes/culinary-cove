@@ -78,9 +78,7 @@ const RecipeDetails = async ({ params: { id }, searchParams}: SearchParamProps) 
                         {recipe.instructions && (
                             <>
                                 <p className="p-medium-16 lg:p-regular-18 text-grey-600">Instructions:</p>
-                                <p className="p-medium-16 lg:p-regular-18">
-                                    {recipe.instructions}
-                                </p>
+                                <div className="p-medium-16 lg:p-regular-18" dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
                             </>
                         )}
                         {/* ORGINAL URL */}
