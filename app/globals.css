@@ -67,7 +67,6 @@
 }
 
 * {
-  list-style: none;
   padding: 0;
   margin: 0;
   scroll-behavior: smooth;
@@ -267,4 +266,11 @@ body {
 
 .react-datepicker__time-list-item--selected {
   background-color: #624cf5 !important;
+}
+
+@layer base {
+  ul, ol {
+    list-style: revert;
+    margin-left: 20px;
+  }
 }
