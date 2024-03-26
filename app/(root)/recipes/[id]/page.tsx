@@ -20,15 +20,13 @@ const RecipeDetails = async ({ params: { id }, searchParams}: SearchParamProps) 
             <section className="bg-primary-50 bg-cover bg-center py-5">
                 <div className="wrapper flex flex-col gap-2 md:gap-12 w-full md:flex-row justify-center items-center">
                     {/* RECIPE IMAGE */}
-                    {recipe.imageUrl && (
-                        <Image
-                            src={recipe.imageUrl}
-                            alt="hero image"
-                            width={700}
-                            height={700}
-                            className="w-full object-cover object-center overflow-hidden rounded-2xl"
-                        />
-                    )}
+                    <Image
+                        src={recipe.imageUrl ? recipe.imageUrl : '/assets/icons/cooking.png'}
+                        alt="recipe image"
+                        width={700}
+                        height={700}
+                        className="w-full object-cover object-center overflow-hidden rounded-2xl"
+                    />
                     {/* RECIPE INFORMATION */}
                     <div className="flex w-full flex-col gap-8 py-5 lg:py-10">
                         {/* METADATA */}

@@ -23,15 +23,13 @@ const Card = ({ recipe }: CardProps) => {
                 href={`/recipes/${recipe._id}`}
                 className="flex-center flex-grow bg-gray-50 bg-cover bg-center text-grey-500"
             >
-                {recipe.imageUrl && (
-                    <Image
-                        src={recipe.imageUrl}
-                        alt="hero image"
-                        width={700}
-                        height={700}
-                        className="h-full min-h-[300px] object-cover object-center"
-                    />
-                )}
+                <Image
+                    src={recipe.imageUrl ? recipe.imageUrl : '/assets/icons/cooking.png'}
+                    alt="recipe image"
+                    width={700}
+                    height={700}
+                    className="h-full min-h-[300px] object-cover object-center"
+                />
             </Link>
             {/* UPDATE */}
             {isRecipeAuthor && (
