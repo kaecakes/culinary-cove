@@ -1,11 +1,19 @@
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
 
-import { getRecipeById, getRelatedRecipesByCategory } from "@/lib/actions/recipe.actions";
-import { SearchParamProps } from "@/types";
+import { DeleteConfirmation } from "@/components/shared/DeleteConfirmation";
 import Collection from "@/components/shared/Collection";
+import { getRecipeById, getRelatedRecipesByCategory } from "@/lib/actions/recipe.actions";
+
+import { SearchParamProps } from "@/types";
 
 const RecipeDetails = async ({ params: { id }, searchParams}: SearchParamProps) => {
+    const { sessionClaims } = auth();
+    const userId = sessionClaims?.userId as string;
+
     const recipe = await getRecipeById(id);
+    const isRecipeAuthor = userId === recipe.author._id.toString();
 
     const relatedRecipes = recipe.category
         ? (await getRelatedRecipesByCategory({
@@ -20,13 +28,25 @@ const RecipeDetails = async ({ params: { id }, searchParams}: SearchParamProps) 
             <section className="bg-primary-50 bg-cover bg-center py-5">
                 <div className="wrapper flex flex-col gap-2 md:gap-12 w-full md:flex-row justify-center items-center">
                     {/* RECIPE IMAGE */}
-                    <Image
-                        src={recipe.imageUrl ? recipe.imageUrl : '/assets/icons/cooking.png'}
-                        alt="recipe image"
-                        width={700}
-                        height={700}
-                        className="w-full object-cover object-center overflow-hidden rounded-2xl"
-                    />
+                    <div className="h-full w-full relative">
+                        <Image
+                            src={recipe.imageUrl ? recipe.imageUrl : '/assets/icons/cooking.png'}
+                            alt="recipe image"
+                            width={700}
+                            height={700}
+                            className="w-full object-cover object-center overflow-hidden rounded-2xl"
+                        />
+                        {/* UPDATE */}
+                        {isRecipeAuthor && (
+                            <div className="absolute right-2 top-2 flex flex-col gap-4 rounded-lg bg-white p-3 shadow-sm transition-all">
+                                <Link href={`/recipes/${recipe._id}/update`}>
+                                    <Image src="/assets/icons/edit.svg" alt="edit" width={20} height={20} />
+                                </Link>
+                                <DeleteConfirmation recipeId={recipe._id} />
+                            </div>
+                        )}
+                    </div>
+                    {/* INFO */}
                     {/* RECIPE INFORMATION */}
                     <div className="flex w-full flex-col gap-8 py-5 lg:py-10">
                         {/* METADATA */}
