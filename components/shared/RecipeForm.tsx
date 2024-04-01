@@ -15,7 +15,7 @@ import { recipeDefaultValues } from "@/constants";
 import { scrapeAndReturnBrightData } from "@/lib/actions/scraper";
 import { useUploadThing } from "@/lib/uploadthing";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,6 +48,12 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
       defaultValues: initialValues,
     })
 
+    useEffect(() => {
+        if (recipe && recipe.instructions) {
+            setInstructions(recipe.instructions);
+        }
+    }, []);
+
     async function getRecipeData() {
         try {
             const recipeUrl = form.getValues().url || "";
@@ -69,8 +75,8 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
         }
     }
 
-    function handleInstructionsChange(instructions: string) {
-        setInstructions(instructions);
+    function handleInstructionsChange(newInstructions: string) {
+        setInstructions(newInstructions);
     }
 
     function handleNewIngredientInput(e: ChangeEvent<HTMLInputElement>) {
@@ -330,7 +336,6 @@ const RecipeForm = ({ userId, type, recipeId, recipe }: RecipeFormProps) => {
                     render={({ field }) => (
                         <FormItem className="w-full">
                             <FormControl className="h-72">
-                                {/* <Textarea placeholder="Instructions" {...field} className="textarea rounded-2xl" /> */}
                                 <Tiptap
                                     instructions={instructions}
                                     onChange={(newInstructions: string) => handleInstructionsChange(newInstructions)}

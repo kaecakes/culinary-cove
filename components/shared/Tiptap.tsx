@@ -3,6 +3,7 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "@/components/shared/Toolbar";
+import { useEffect } from "react";
 
 type TipTapType = {
     onChange: (newInstructions: string) => void,
@@ -16,8 +17,9 @@ const Tiptap = ({ onChange, instructions }: TipTapType) => {
 
     const editor = useEditor({
         extensions: [
-        StarterKit,
+            StarterKit,
         ],
+        content: instructions,
         editorProps: {
             attributes: {
                 class: "flex flex-col px-4 py-3 justify-start items-start w-full outline-none border-none"
@@ -28,10 +30,14 @@ const Tiptap = ({ onChange, instructions }: TipTapType) => {
         }
     });
 
+    useEffect(() => {
+        editor?.commands.setContent(instructions)
+    }, [editor]);
+
     return (
         <div className="w-full px-4">
             <Toolbar editor={editor} content={instructions} />
-            <EditorContent editor={editor} content={instructions} style={{ whiteSpace: "pre-line" }} className="textarea rounded-br-2xl rounded-bl-2xl h-72 outline-none border-none overflow-y-auto" />
+            <EditorContent editor={editor} style={{ whiteSpace: "pre-line" }} className="textarea rounded-br-2xl rounded-bl-2xl h-72 outline-none border-none overflow-y-auto" />
         </div>
     )
 }
